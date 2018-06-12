@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calendar</title>
+    <style>
+        body, html {margin: auto; height: 100%;}
+        .grid-container {
+            height: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            grid-gap: 2px;
+        }
+        
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: grey;
+            padding: 50px;
+            box-sizing: border-box;
+            border-collapse: collapse;
+            
+        }
+
+        .grid-item:focus {
+            outline: none;
+        }
+
+        .selected {
+            background-color: purple;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container calendar-parent"></div>
+    <button>Put entry</button>
+    <input type="text">
+    <p></p>
+    
+    <script>
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth();
+
+        function daysInMonth (month, year) { 
+            return new Date(year, month +1, 0).getDate();
+        }
+
+        let daysData = [];
+        for(let i = 0; i < daysInMonth(currentMonth, currentYear); i++) {
+            daysData.push({Task: ''});
+        }
+
+        function putDataOnDays(daySelected) {
+            const textToAdd = document.querySelector('input').value;
+            daysData[daySelected].Task = textToAdd;
+        }
+
+        function generateCalendar(){
+            const parent = document.querySelector('.calendar-parent');
+            const daysNow = daysInMonth(currentMonth, currentYear);
+            for(let i = 1; i <= daysNow; i++) {
+                const oneItem = document.createElement('div');
+                oneItem.classList.add('grid-item', `day-no-${i}`);
+                oneItem.setAttribute('tabindex', i);
+                oneItem.textContent = i;
+                parent.appendChild(oneItem);
+            }
+        }
+        generateCalendar();
+
+        function checkAndShowData(arrayId) {
+            if(daysData[arrayId].Task === '') {
+                document.querySelector('p').textContent = 'No tasks on this day';
+            } else {
+                document.querySelector('p').textContent = `
+                    You have to do: ${daysData[arrayId].Task}
+                `;
+            }
+        }
+
+        function unselectAllDays(ev) {
+            if(ev.relatedTarget === null || ev.toElement === 'button') {
+                dayElement.forEach(day => day.classList.remove('selected'));
+            }
+        }
+
+        const dayElement = Array.from(document.querySelectorAll('.grid-item'));
+        dayElement.forEach(day => {
+                day.addEventListener('click', function(ev) {
+                    if(ev.shiftKey) {
+                        
+                    }
+                    checkAndShowData(day.tabIndex -1);
+                    this.classList.toggle('selected');
+                });
+                day.addEventListener('focusout', function(ev) {
+                    unselectAllDays(ev);
+                });
+            });
+
+        const buttonClick = document.querySelector('button')
+            .addEventListener('click', function(ev) {
+                dayElement.forEach(day => {
+                    if(day.classList.contains('selected')) {
+                        putDataOnDays(day.tabIndex -1);
+                    }
+                });
+                unselectAllDays(ev);
+            });
+
+        
+    </script>
+</body>
+</html>
