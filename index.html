@@ -89,19 +89,22 @@
                 dayElement.forEach(day => day.classList.remove('selected'));
             }
         }
-        //Oh boy I need to fix this for real ^^^^^^^^^^^^^^^^^
-        //Main idea: user clicks on days and they select individualy
-        //If user holds shift key then it lets him select multiple days
+        //Unselect all days if user clicks not on the day or on the button to put entry
+
+        function selectDays(day, ctrlPressed) {
+            if(ctrlPressed) {
+                day.classList.toggle('selected');
+            } else {
+                dayElement.forEach(day => dday.classList.remove('selected'));
+                day.classList.toggle('selected');
+            }
+        }
 
         const dayElement = Array.from(document.querySelectorAll('.grid-item'));
         dayElement.forEach(day => {
                 day.addEventListener('click', function(ev) {
-                    if(ev.shiftKey) {
-                        //Probably some sort of code should be here but
-                        //I haven't figured it out, YET
-                    }
-                    checkAndShowData(day.tabIndex -1);
-                    this.classList.toggle('selected');
+                    selectDays(this, ev.ctrlKey);
+                    //checkAndShowData(day.tabIndex -1);
                 });
                 day.addEventListener('focusout', function(ev) {
                     unselectAllDays(ev); //This might be problem too in the future
