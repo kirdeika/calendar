@@ -1,0 +1,28 @@
+body, html {margin: auto; height: 100%;}
+
+.grid-container {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 2px;
+}
+
+.grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+    padding: 50px;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    
+}
+
+.grid-item:focus {
+    outline: none;
+}
+
+.selected {
+    background-color: purple;
+}
