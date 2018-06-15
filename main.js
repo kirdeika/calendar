@@ -7,14 +7,19 @@ function daysInMonth (month, year) {
 
 let daysData = [];
 for(let i = 0; i < daysInMonth(currentMonth, currentYear); i++) {
-    daysData.push({Task: []});
+    daysData.push({
+        TaskHeadline: [],
+        TaskExtraText: [],
+    });
 }
 //Create empty array and fill it with the empty tasks ^
 //P.S. array id +1 = day of the month
 
 function putDataOnDays(daySelected) {
-    const textToAdd = document.querySelector('input').value;
-    daysData[daySelected].Task.push(textToAdd);
+    const textToAddH = document.querySelector('input[name="headline"]').value;
+    const textToAddET = document.querySelector('textarea[name="extra-notes"]').value;
+    daysData[daySelected].TaskHeadline.push(textToAddH);
+    daysData[daySelected].TaskExtraText.push(textToAddET);
 }
 //easily put data inside the according object
 
@@ -32,12 +37,15 @@ function generateCalendar(){
 generateCalendar(); //immideatly call this, later i need to fix it, probably
 
 function checkAndShowData(arrayId) {
-    if(daysData[arrayId].Task[arrayId] === undefined) {
+    if(daysData[arrayId].TaskHeadline.length === 0 && daysData[arrayId].TaskExtraText.length === 0) {
         document.querySelector('ul').textContent = 'You have no tasks';
     } else {
         const list = document.querySelector('ul').innerHTML =
-            daysData[arrayId].Task
-                .map(tasks => `<li>${tasks}</li>`);
+            daysData[arrayId].TaskHeadline.map((taskH, index) => {
+                return `<li>Headline: ${taskH} -- Extra notes: ${daysData[arrayId].TaskExtraText[index]}</li>`
+            });
+            //this part took me sooooooo long to figure it out. Main thing is that I use
+            //[index] keyword to get extra notes for same headline, feels good
     }
 }
 
