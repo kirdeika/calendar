@@ -36,7 +36,7 @@
     <div class="grid-container calendar-parent"></div>
     <button>Put entry</button>
     <input type="text">
-    <p></p>
+    <ul></ul>
     
     <script>
         const currentYear = new Date().getFullYear();   
@@ -48,14 +48,14 @@
 
         let daysData = [];
         for(let i = 0; i < daysInMonth(currentMonth, currentYear); i++) {
-            daysData.push({Task: ''});
+            daysData.push({Task: []});
         }
         //Create empty array and fill it with the empty tasks ^
         //P.S. array id +1 = day of the month
 
         function putDataOnDays(daySelected) {
             const textToAdd = document.querySelector('input').value;
-            daysData[daySelected].Task = textToAdd;
+            daysData[daySelected].Task.push(textToAdd);
         }
         //easily put data inside the according object
 
@@ -73,15 +73,23 @@
         generateCalendar(); //immideatly call this, later i need to fix it, probably
 
         function checkAndShowData(arrayId) {
-            if(daysData[arrayId].Task === '') {
-                document.querySelector('p').textContent = 'No tasks on this day';
-            } else {
-                document.querySelector('p').textContent = `
+            /* if(daysData[arrayId].Task === '') {
+                document.querySelector('ul').textContent = 'No tasks on this day';
+            } else { //Bellow I need to display all tasks the user has
+                document.querySelector('ul').textContent = `
                     You have to do: ${daysData[arrayId].Task}
                 `;
+            } */
+            if(daysData[arrayId].Task[arrayId] === undefined) {
+                document.querySelector('ul').textContent = 'You have no tasks';
+            } else {
+                const list = document.querySelector('ul').innerHTML =
+                    daysData[arrayId].Task
+                        .map(tasks => `<li>${tasks}</li>`);
             }
         }
-        //Display object data to user
+
+        //Display object data to user ^^
 
 
         function unselectAllDays(ev) {
@@ -104,7 +112,7 @@
         dayElement.forEach(day => {
                 day.addEventListener('click', function(ev) {
                     selectDays(this, ev.ctrlKey);
-                    //checkAndShowData(day.tabIndex -1);
+                    checkAndShowData(day.tabIndex -1);
                 });
                 day.addEventListener('focusout', function(ev) {
                     unselectAllDays(ev); //This might be problem too in the future
